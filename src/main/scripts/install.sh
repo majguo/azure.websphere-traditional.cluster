@@ -39,29 +39,12 @@ create_dmgr_profile() {
     hostName=$2
     nodeName=$3
     cellName=$4
-    adminUserName=$5
-    adminPassword=$6
 
     echo "$(date): Start to create deployment manager profile."
     ${WAS_ND_INSTALL_DIRECTORY}/bin/manageprofiles.sh -create -profileName ${profileName} -hostName $hostName \
         -templatePath ${WAS_ND_INSTALL_DIRECTORY}/profileTemplates/management -serverType DEPLOYMENT_MANAGER \
-        -nodeName ${nodeName} -cellName ${cellName} -enableAdminSecurity true -adminUserName ${adminUserName} -adminPassword ${adminPassword}
+        -nodeName ${nodeName} -cellName ${cellName}
     echo "$(date): Deployment manager profile created."
-}
-
-add_admin_credentials_to_soap_client_props() {
-    profileName=$1
-    adminUserName=$2
-    adminPassword=$3
-    soapClientProps=${WAS_ND_INSTALL_DIRECTORY}/profiles/${profileName}/properties/soap.client.props
-
-    # Add admin credentials
-    sed -i "s/com.ibm.SOAP.securityEnabled=false/com.ibm.SOAP.securityEnabled=true/g" "$soapClientProps"
-    sed -i "s/com.ibm.SOAP.loginUserid=/com.ibm.SOAP.loginUserid=${adminUserName}/g" "$soapClientProps"
-    sed -i "s/com.ibm.SOAP.loginPassword=/com.ibm.SOAP.loginPassword=${adminPassword}/g" "$soapClientProps"
-
-    # Encrypt com.ibm.SOAP.loginPassword
-    ${WAS_ND_INSTALL_DIRECTORY}/profiles/${profileName}/bin/PropFilePasswordEncoder.sh "$soapClientProps" com.ibm.SOAP.loginPassword
 }
 
 create_was_service() {
@@ -185,12 +168,10 @@ create_custom_profile() {
     nodeName=$3
     dmgrHostName=$4
     dmgrPort=$5
-    dmgrAdminUserName=$6
-    dmgrAdminPassword=$7
     
     echo "$(date): Check if dmgr is ready."
     curl $dmgrHostName:$dmgrPort --output - >/dev/null 2>&1
-    while [ $? -ne 56 ]
+    while [ $? -ne 0 ]
     do
         sleep 5
         echo "dmgr is not ready"
@@ -201,7 +182,7 @@ create_custom_profile() {
 
     output=$(${WAS_ND_INSTALL_DIRECTORY}/bin/manageprofiles.sh -create -profileName $profileName -hostName $hostName -nodeName $nodeName \
         -profilePath ${WAS_ND_INSTALL_DIRECTORY}/profiles/$profileName -templatePath ${WAS_ND_INSTALL_DIRECTORY}/profileTemplates/managed \
-        -dmgrHost $dmgrHostName -dmgrPort $dmgrPort -dmgrAdminUserName $dmgrAdminUserName -dmgrAdminPassword $dmgrAdminPassword 2>&1)
+        -dmgrHost $dmgrHostName -dmgrPort $dmgrPort 2>&1)
     while echo $output | grep -qv "SUCCESS"
     do
         sleep 10
@@ -209,7 +190,7 @@ create_custom_profile() {
         rm -rf ${WAS_ND_INSTALL_DIRECTORY}/profiles/$profileName
         output=$(${WAS_ND_INSTALL_DIRECTORY}/bin/manageprofiles.sh -create -profileName $profileName -hostName $hostName -nodeName $nodeName \
             -profilePath ${WAS_ND_INSTALL_DIRECTORY}/profiles/$profileName -templatePath ${WAS_ND_INSTALL_DIRECTORY}/profileTemplates/managed \
-            -dmgrHost $dmgrHostName -dmgrPort $dmgrPort -dmgrAdminUserName $dmgrAdminUserName -dmgrAdminPassword $dmgrAdminPassword 2>&1)
+            -dmgrHost $dmgrHostName -dmgrPort $dmgrPort 2>&1)
     done
     echo $output
     echo "$(date): Custom profile created."
@@ -219,41 +200,37 @@ create_custom_profile() {
 source /datadrive/virtualimage.properties
 
 # Check required parameters
-if [ "$7" = True ] && [ "${11}" == "" ]; then 
+if [ "$5" = True ] && [ "${9}" == "" ]; then 
   echo "Usage:"
-  echo "  ./install.sh [dmgr] [adminUserName] [adminPassword] [dmgrHostName] [members] [dynamic] True [storageAccountName] [storageAccountKey] [fileShareName] [mountpointPath]"
+  echo "  ./install.sh [dmgr] [dmgrHostName] [members] [dynamic] True [storageAccountName] [storageAccountKey] [fileShareName] [mountpointPath]"
   exit 1
-elif [ "$7" == "" ]; then 
+elif [ "$5" == "" ]; then 
   echo "Usage:"
-  echo "  ./install.sh [dmgr] [adminUserName] [adminPassword] [dmgrHostName] [members] [dynamic] False"
+  echo "  ./install.sh [dmgr] [dmgrHostName] [members] [dynamic] False"
   exit 1
 fi
 dmgr=$1
-adminUserName=$2
-adminPassword=$3
-dmgrHostName=$4
-members=$5
-dynamic=$6
-configureIHS=$7
-storageAccountName=$8
-storageAccountKey=$9
-fileShareName=${10}
-mountpointPath=${11}
+dmgrHostName=$2
+members=$3
+dynamic=$4
+configureIHS=$5
+storageAccountName=$6
+storageAccountKey=$7
+fileShareName=$8
+mountpointPath=$9
 
 # Create cluster by creating deployment manager, node agent & add nodes to be managed
 if [ "$dmgr" = True ]; then
-    create_dmgr_profile Dmgr001 $(hostname) Dmgr001Node Dmgr001NodeCell "$adminUserName" "$adminPassword"
-    add_admin_credentials_to_soap_client_props Dmgr001 "$adminUserName" "$adminPassword"
+    create_dmgr_profile Dmgr001 $(hostname) Dmgr001Node Dmgr001NodeCell
     create_was_service dmgr Dmgr001
     ${WAS_ND_INSTALL_DIRECTORY}/profiles/Dmgr001/bin/startServer.sh dmgr
     create_cluster Dmgr001 Dmgr001Node Dmgr001NodeCell MyCluster $members $dynamic
 
     # Configure IHS if required
     if [ "$configureIHS" = True ]; then
-        ./configure-ihs-on-dmgr.sh Dmgr001 "$adminUserName" "$adminPassword" "$storageAccountName" "$storageAccountKey" "$fileShareName" "$mountpointPath"
+        ./configure-ihs-on-dmgr.sh Dmgr001 "$storageAccountName" "$storageAccountKey" "$fileShareName" "$mountpointPath"
     fi
 else
-    create_custom_profile Custom $(hostname) $(hostname)Node01 $dmgrHostName 8879 "$adminUserName" "$adminPassword"
-    add_admin_credentials_to_soap_client_props Custom "$adminUserName" "$adminPassword"
+    create_custom_profile Custom $(hostname) $(hostname)Node01 $dmgrHostName 8879
     create_was_service nodeagent Custom
 fi

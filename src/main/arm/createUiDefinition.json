@@ -183,32 +183,6 @@
                             "hidePassword": false
                         },
                         "osPlatform": "Linux"
-                    },
-                    {
-                        "name": "wasUsername",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "WebSphere administrator",
-                        "defaultValue": "wsadmin",
-                        "toolTip": "Use only allowed characters.",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^[a-z0-9A-Z]{1,30}$",
-                            "validationMessage": "The value must be 1-30 characters long and must only contain letters and numbers."
-                        }
-                    },
-                    {
-                        "name": "wasPassword",
-                        "type": "Microsoft.Common.PasswordBox",
-                        "label": {
-                            "password": "Password for WebSphere administrator",
-                            "confirmPassword": "Confirm password"
-                        },
-                        "toolTip": "Password for WebSphere administrator.",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{12,}$",
-                            "validationMessage": "The password must contain at least 12 characters, with at least 1 uppercase letter, 1 lowercase letter and 1 number, and special characters are not allowed."
-                        }
                     }
                 ]
             },
@@ -370,8 +344,6 @@
             "adminUsername": "[steps('ClusterConfig').adminUsername]",
             "adminPasswordOrKey": "[if(equals(steps('ClusterConfig').adminPasswordOrKey.authenticationType, 'password'), steps('ClusterConfig').adminPasswordOrKey.password, steps('ClusterConfig').adminPasswordOrKey.sshPublicKey)]",
             "authenticationType": "[steps('ClusterConfig').adminPasswordOrKey.authenticationType]",
-            "wasUsername": "[steps('ClusterConfig').wasUsername]",
-            "wasPassword": "[steps('ClusterConfig').wasPassword]",
             "configureIHS": "[bool(steps('IHSConfig').configIHS)]",
             "ihsVmSize": "[steps('IHSConfig').ihsInfo.ihsVmSize]",
             "ihsVMPrefix": "[steps('IHSConfig').ihsInfo.ihsVMPrefix]",

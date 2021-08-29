@@ -15,18 +15,16 @@
 #  limitations under the License.
 
 # Check required parameters
-if [ "$7" == "" ]; then 
+if [ "$5" == "" ]; then 
   echo "Usage:"
-  echo "  ./configure-ihs-on-dmgr.sh [profile] [wasUser] [wasPassword] [storageAccountName] [storageAccountKey] [fileShareName] [mountpointPath]"
+  echo "  ./configure-ihs-on-dmgr.sh [profile] [storageAccountName] [storageAccountKey] [fileShareName] [mountpointPath]"
   exit 1
 fi
 profile=$1
-wasUser=$2
-wasPassword=$3
-storageAccountName=$4
-storageAccountKey=$5
-fileShareName=$6
-mountpointPath=$7
+storageAccountName=$2
+storageAccountKey=$3
+fileShareName=$4
+mountpointPath=$5
 
 echo "$(date): Start to configure IHS on dmgr."
 
@@ -62,7 +60,7 @@ fi
 read -r -a cmds <<<`(tail -n1) <$WAS_ND_INSTALL_DIRECTORY/bin/configurewebserver1.sh`
 nodeName=${cmds[14]}
 
-$WAS_ND_INSTALL_DIRECTORY/bin/configurewebserver1.sh -profileName $profile -user $wasUser -password $wasPassword >/dev/null 2>&1
+$WAS_ND_INSTALL_DIRECTORY/bin/configurewebserver1.sh -profileName $profile >/dev/null 2>&1
 rm -rf $WAS_ND_INSTALL_DIRECTORY/bin/configurewebserver1.sh
 
 # Configure intelligent management for IHS

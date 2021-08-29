@@ -32,12 +32,6 @@
         "authenticationType": {
             "value": "${authenticationType}"
         },
-        "wasUsername": {
-            "value": "${wasUsername}"
-        },
-        "wasPassword": {
-            "value": "${wasPassword}"
-        },
         "configureIHS": {
             "value": "${configureIHS}"
         },

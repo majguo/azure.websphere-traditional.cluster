@@ -86,18 +86,6 @@
                 "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
             }
         },
-        "wasUsername": {
-            "type": "string",
-            "metadata": {
-                "description": "Username for WebSphere admin."
-            }
-        },
-        "wasPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Password for WebSphere admin."
-            }
-        },
         "configureIHS": {
             "type": "bool",
             "metadata": {
@@ -175,7 +163,7 @@
     },
     "variables": {
         "const_addressPrefix": "10.0.0.0/16",
-        "const_arguments": "[concat(' ',parameters('wasUsername'),' ',parameters('wasPassword'),' ',variables('name_dmgrVM'),' ',sub(parameters('numberOfNodes'),1),' ',parameters('dynamic'),' ',parameters('configureIHS'))]",
+        "const_arguments": "[concat(' ',variables('name_dmgrVM'),' ',sub(parameters('numberOfNodes'),1),' ',parameters('dynamic'),' ',parameters('configureIHS'))]",
         "const_dnsLabelPrefix": "[concat(parameters('dnsLabelPrefix'), take(replace(parameters('guidValue'),'-',''),6))]",
         "const_ihsArguments1": "[concat(' ',variables('name_dmgrVM'),' ',parameters('ihsUnixUsername'),' ',parameters('ihsAdminUsername'),' ',parameters('ihsAdminPassword'),' ',variables('name_storageAccount'))]",
         "const_ihsArguments2": "[concat(' ',variables('name_share'),' ',variables('const_mountPointPath'))]",
