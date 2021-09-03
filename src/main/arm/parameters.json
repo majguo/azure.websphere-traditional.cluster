@@ -11,6 +11,9 @@
         "ibmUserPwd": {
             "value": "${ibmUserPwd}"
         },
+        "twasndVmImageId": {
+            "value": "${twasndVmImageId}"
+        },
         "numberOfNodes": {
             "value": "${numberOfNodes}"
         },
@@ -43,6 +46,9 @@
         },
         "configureIHS": {
             "value": "${configureIHS}"
+        },
+        "ihsVmImageId": {
+            "value": "${ihsVmImageId}"
         },
         "ihsVmSize": {
             "value": "${ihsVmSize}"

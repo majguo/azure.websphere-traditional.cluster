@@ -42,6 +42,10 @@
                 "description": "Boolean value indicating, if the cluster is a dynamic one or not."
             }
         },
+        "twasndVmImageId": {
+            "defaultValue": "",
+            "type": "string"
+        },
         "numberOfNodes": {
             "type": "int",
             "metadata": {
@@ -111,6 +115,10 @@
             "metadata": {
                 "description": "Boolean value indicating, if an IBM HTTP Server load balancer will be configured."
             }
+        },
+        "ihsVmImageId": {
+            "defaultValue": "",
+            "type": "string"
         },
         "ihsVmSize": {
             "type": "string",
@@ -447,10 +455,7 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "${image.publisher}",
-                        "offer": "${twasnd.image.offer}",
-                        "sku": "${twasnd.image.sku}",
-                        "version": "${twasnd.image.version}"
+                        "id": "[parameters('twasndVmImageId')]"
                     },
                     "osDisk": {
                         "name": "[concat(if(equals(copyIndex(), 0), variables('name_dmgrVM'), concat(variables('const_managedVMPrefix'), copyIndex())), '-disk')]",
@@ -480,11 +485,6 @@
                         "storageUri": "[reference(variables('ref_storage'), '${azure.apiVersion2}').primaryEndpoints.blob]"
                     }
                 }
-            },
-            "plan": {
-                "name": "${twasnd.image.sku}",
-                "publisher": "${image.publisher}",
-                "product": "${twasnd.image.offer}"
             }
         },
         {
@@ -627,10 +627,7 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "${image.publisher}",
-                        "offer": "${ihs.image.offer}",
-                        "sku": "${ihs.image.sku}",
-                        "version": "${ihs.image.version}"
+                        "id": "[parameters('ihsVmImageId')]"
                     },
                     "osDisk": {
                         "name": "[concat(variables('name_ihsVM'), '-disk')]",
@@ -660,11 +657,6 @@
                         "storageUri": "[reference(variables('ref_storage'), '${azure.apiVersion2}').primaryEndpoints.blob]"
                     }
                 }
-            },
-            "plan": {
-                "name": "${ihs.image.sku}",
-                "publisher": "${image.publisher}",
-                "product": "${ihs.image.offer}"
             }
         },
         {
