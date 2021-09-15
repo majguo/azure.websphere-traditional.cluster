@@ -23,18 +23,6 @@
                 "description": "Location for all resources."
             }
         },
-        "ibmUserId": {
-            "type": "string",
-            "metadata": {
-                "description": "Username of your IBMid account."
-            }
-        },
-        "ibmUserPwd": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Password of your IBMid account."
-            }
-        },
         "dynamic": {
             "type": "bool",
             "defaultValue": false,
@@ -469,8 +457,7 @@
                     "computerName": "[if(equals(copyIndex(), 0), variables('name_dmgrVM'), concat(variables('const_managedVMPrefix'), copyIndex()))]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPasswordOrKey')]",
-                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('const_linuxConfiguration'))]",
-                    "customData": "[base64(concat(parameters('ibmUserId'), ' ', parameters('ibmUserPwd')))]"
+                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('const_linuxConfiguration'))]"
                 },
                 "networkProfile": {
                     "networkInterfaces": [
@@ -641,8 +628,7 @@
                     "computerName": "[variables('name_ihsVM')]",
                     "adminUsername": "[parameters('ihsUnixUsername')]",
                     "adminPassword": "[parameters('ihsUnixPasswordOrKey')]",
-                    "linuxConfiguration": "[if(equals(parameters('ihsAuthenticationType'), 'password'), json('null'), variables('const_ihsLinuxConfiguration'))]",
-                    "customData": "[base64(concat(parameters('ibmUserId'), ' ', parameters('ibmUserPwd')))]"
+                    "linuxConfiguration": "[if(equals(parameters('ihsAuthenticationType'), 'password'), json('null'), variables('const_ihsLinuxConfiguration'))]"
                 },
                 "networkProfile": {
                     "networkInterfaces": [

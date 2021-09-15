@@ -5,12 +5,6 @@
         "_artifactsLocation": {
             "value": "${artifactsLocationBase}/${project.artifactId}/${git.tag}/src/main/"
         },
-        "ibmUserId": {
-            "value": "${ibmUserId}"
-        },
-        "ibmUserPwd": {
-            "value": "${ibmUserPwd}"
-        },
         "twasndVmImageId": {
             "value": "${twasndVmImageId}"
         },
