@@ -581,10 +581,7 @@ resource clusterVMs 'Microsoft.Compute/virtualMachines@2022-03-01' = [for i in r
     }
     storageProfile: {
       imageReference: {
-        publisher: config.imagePublisher
-        offer: config.twasNdImageOffer
-        sku: config.twasNdImageSku
-        version: config.twasNdImageVersion
+        id: resourceId('imageTest424181519316-twasND', 'Microsoft.Compute/images', 'vm424181519316')
       }
       osDisk: {
         name: format('{0}-disk', i == 0 ? name_dmgrVM : '${const_managedVMPrefix}${i}')
@@ -614,11 +611,6 @@ resource clusterVMs 'Microsoft.Compute/virtualMachines@2022-03-01' = [for i in r
         storageUri: reference(storageAccount.id, '2021-09-01').primaryEndpoints.blob
       }
     }
-  }
-  plan: {
-    name: config.twasNdImageSku
-    publisher: config.imagePublisher
-    product: config.twasNdImageOffer
   }
   dependsOn: [
     dmgrVMNetworkInterface
@@ -765,10 +757,7 @@ resource ihsVM 'Microsoft.Compute/virtualMachines@2022-03-01' = if (const_config
     }
     storageProfile: {
       imageReference: {
-        publisher: config.imagePublisher
-        offer: config.ihsImageOffer
-        sku: config.ihsImageSku
-        version: config.ihsImageVersion
+        id: resourceId('imageTest424181743120-ihs', 'Microsoft.Compute/images', 'vm424181743120')
       }
       osDisk: {
         name: '${name_ihsVM}-disk'
@@ -798,11 +787,6 @@ resource ihsVM 'Microsoft.Compute/virtualMachines@2022-03-01' = if (const_config
         storageUri: reference(storageAccount.id, '2021-09-01').primaryEndpoints.blob
       }
     }
-  }
-  plan: {
-    name: config.ihsImageSku
-    publisher: config.imagePublisher
-    product: config.ihsImageOffer
   }
 }
 
