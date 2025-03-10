@@ -475,6 +475,9 @@ resource dmgrVMNetworkInterfaceNoPubIp 'Microsoft.Network/networkInterfaces@${az
         }
       }
     ]
+    dnsSettings: {
+      internalDnsNameLabel: name_dmgrVM
+    }
   }
 }
 
@@ -754,6 +757,9 @@ resource ihsVMNetworkInterfaceNoPubIp 'Microsoft.Network/networkInterfaces@${azu
         }
       }
     ]
+    dnsSettings: {
+      internalDnsNameLabel: name_ihsVM
+    }
   }
 }
 
