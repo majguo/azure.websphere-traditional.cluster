@@ -124,7 +124,7 @@ param vnetForCluster object = {
   resourceGroup: resourceGroup().name
   addressPrefixes: selectLoadBalancer == 'appgw' ? ['10.0.0.0/23'] : ['10.0.0.32/27']
   addressPrefix: selectLoadBalancer == 'appgw' ? '10.0.0.0/23' : '10.0.0.32/27'
-  newOrExisting: 'new'
+  newOrExisting: 'existing'
   subnets: selectLoadBalancer == 'appgw' ? {
     gatewaySubnet: {
       name: 'twascluster-appgw-subnet'
@@ -140,14 +140,14 @@ param vnetForCluster object = {
     clusterSubnet: {
       name: 'twascluster-subnet'
       addressPrefix: '10.0.0.32/27'
-      startAddress: '10.0.0.36'
+      startAddress: '10.0.0.32'
     }
   }
 }
 @description('To mitigate ARM-TTK error: Control Named vnetForCluster must output the newOrExisting property when hideExisting is false')
-param newOrExistingVnetForCluster string = 'new'
+param newOrExistingVnetForCluster string = 'existing'
 @description('To mitigate ARM-TTK error: Control Named vnetForCluster must output the resourceGroup property when hideExisting is false')
-param vnetRGNameForCluster string = resourceGroup().name
+param vnetRGNameForCluster string = 'twasClusterTestRG-majguo-16752355067-244'
 
 @description('Boolean value indicating, if user wants to enable database connection.')
 param enableDB bool = false
