@@ -283,9 +283,12 @@ jobs:
           
           # Create a PostgreSQL Flexible Server that allows Azure services to access
           az postgres flexible-server create \
-            --resource-group ${{ env.testResourceGroup }} --name ${{ env.dbInstanceName }} --database-name testdb \
+            --resource-group ${{ env.testResourceGroup }} --name ${{ env.dbInstanceName }} \
             --admin-user testuser --admin-password ${{ env.dbPassword }} --public-access 0.0.0.0 \
             --location ${{ env.location }} --sku-name Standard_B1ms --tier Burstable
+          az postgres flexible-server db create \
+            --resource-group ${{ env.testResourceGroup }} --server-name ${{ env.dbInstanceName }} \
+            --database-name testdb
           host=$(az postgres flexible-server show \
             --resource-group ${{ env.testResourceGroup }} --name ${{ env.dbInstanceName }} \
             --query "fullyQualifiedDomainName" -o tsv)
