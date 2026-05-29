@@ -40,7 +40,7 @@ on:
         description: 'Location of the Azure resources'
         required: true
         type: string
-        default: 'eastus2'
+        default: 'westus'
       configurations_for_it:
         description: "JSON string of environment variables used for IT"
         required: false
@@ -81,7 +81,7 @@ env:
   uamiName: uami${{ github.run_id }}${{ github.run_number }}
   testResourceGroup: twasClusterTestRG-${{ github.repository_owner }}-${{ github.run_id }}-${{ github.run_number }}
   testDeploymentName: twasClusterTestDeployment-${{ github.run_id }}-${{ github.run_number }}
-  location: ${{ github.event.inputs.location || 'eastus2' }}
+  location: ${{ github.event.inputs.location || 'westus' }}
   scriptLocation: https://raw.githubusercontent.com/${{ secrets.USER_NAME }}/azure.websphere-traditional.cluster/$GITHUB_REF_NAME/test/
   curlParameters: "--connect-timeout 60 --max-time 180 --retry 10 --retry-delay 30 --retry-max-time 180"
 jobs:
