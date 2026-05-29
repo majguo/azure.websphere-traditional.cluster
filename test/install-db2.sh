@@ -27,5 +27,10 @@ apt-get -q update
 apt-get -y -q install docker-ce docker-ce-cli containerd.io
 systemctl start docker
 
-# Run IBM DB2 as a container
-docker run -itd --name mydb2 --privileged=true -p 50000:50000 -e LICENSE=accept -e DB2INST1_PASSWORD=${db2inst1Password} -e SAMPLEDB=true -v $(pwd)/db2data:/database ibmcom/db2
+# Run IBM DB2 as a container.
+# Note: the "ibmcom/db2" image on Docker Hub is deprecated and no longer receives updates;
+# the last published tag is 11.5.8.0 (which "latest" also points to). It is pinned below
+# for reproducibility. For newer versions (e.g., 11.5.9.0) and ongoing maintenance/security
+# fixes, consider switching to the IBM Container Registry image, for example:
+#   icr.io/db2_community/db2:11.5.9.0
+docker run -itd --name mydb2 --privileged=true -p 50000:50000 -e LICENSE=accept -e DB2INST1_PASSWORD=${db2inst1Password} -e SAMPLEDB=true -v $(pwd)/db2data:/database ibmcom/db2:11.5.8.0
